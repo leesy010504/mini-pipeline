@@ -1,3 +1,20 @@
+"""
+models -- 수집 데이터 검증용 Pydantic 스키마
+
+fetch 모듈이 받아온 raw dict를 Weather/Country/IPInfo 모델로 검증한다.
+레코드 하나의 검증 실패가 전체 파이프라인을 중단시키지 않도록,
+예외를 올리는 대신 로깅만 남기고 넘어간다.
+
+작성자: 이상윤
+
+구성
+  Weather / Country / IPInfo               -- 응답 스키마 정의 (Field로 값 범위 제약)
+  parse_weather / parse_country / parse_ip -- raw dict -> 모델 변환 + 검증
+
+변경내역
+  2026-07-15  최초 작성
+"""
+
 import logging
 
 from pydantic import BaseModel, Field, ValidationError

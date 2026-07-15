@@ -1,3 +1,21 @@
+"""
+storage -- CSV/Parquet 저장 및 읽기·쓰기 성능 비교
+
+Pydantic 모델 리스트를 DataFrame으로 변환한 뒤 CSV와 Parquet 두 포맷으로
+저장하고, 각각의 쓰기/읽기 소요 시간과 파일 크기를 측정해 비교한다.
+
+작성자: 이상윤
+
+구성
+  records_to_df       -- BaseModel 리스트 -> DataFrame 변환
+  save_and_benchmark  -- CSV/Parquet 저장 + 읽기 재실행 + 시간/용량 측정
+  print_benchmark     -- 측정 결과를 표 형태로 출력
+
+변경내역
+  2026-07-15  최초 작성
+"""
+
+
 import time
 from pathlib import Path
 
