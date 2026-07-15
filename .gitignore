@@ -1,0 +1,21 @@
+# venv
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+
+# data outputs
+data/*.csv
+data/*.parquet
