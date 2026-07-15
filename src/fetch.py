@@ -26,6 +26,7 @@ SOURCES = {
     "ip": "http://ip-api.com/json/8.8.8.8"
 }
 
+# 이름표 하나(name)에 대해 URL 하나를 호출하고 JSON으로 반환한다.
 async def fetch_json(client: httpx.AsyncClient, name: str, url: str) -> dict:
     try:
         response = await client.get(url)
@@ -36,7 +37,7 @@ async def fetch_json(client: httpx.AsyncClient, name: str, url: str) -> dict:
         logger.error("%s 수집 실패: %s", name, e)
         raise
 
-
+# SOURCES에 등록된 API를 전부 동시에 호출해 {이름: 응답} 딕셔너리로 모은다.
 async def fetch_all() -> dict:
     async with httpx.AsyncClient(timeout=20.0) as client:
         async with asyncio.TaskGroup() as tg:

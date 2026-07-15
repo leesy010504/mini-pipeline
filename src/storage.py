@@ -24,9 +24,11 @@ from pydantic import BaseModel
 
 DATA_DIR = Path("data")
 
+# Pydantic 모델 리스트를 DataFrame으로 변환한다.
 def records_to_df(records: list[BaseModel]) -> pd.DataFrame:
     return pd.DataFrame([r.model_dump() for r in records])
 
+# CSV/Parquet에 대해 각각 쓰기->읽기를 실행하며 걸린 시간과 파일 크기를 측정한다.
 def save_and_benchmark(df: pd.DataFrame, filename: str) -> dict:
     DATA_DIR.mkdir(exist_ok=True)
     csv_path = DATA_DIR / f"{filename}.csv"
@@ -61,6 +63,7 @@ def save_and_benchmark(df: pd.DataFrame, filename: str) -> dict:
         }
     }
 
+# save_and_benchmark 결과를 표 형태로 출력한다.
 def print_benchmark(name: str, result: dict):
     print(f"\n {name} CSV vs Parquet Benchmark:")
     print(f"{'format':<10}{'write(s)':<12}{'read(s)':<12}{'size(KB)':<10}")

@@ -21,17 +21,20 @@ from pydantic import BaseModel, Field, ValidationError
 
 logger = logging.getLogger(__name__)
 
+# Open-Meteo 시간대별 응답 스키마
 class Weather(BaseModel):
     time: str
     temperature_2m: float
     precipitation_probability: int = Field(..., ge=0, le=100)  # 0~100 사이의 값만 허용
 
+# RestCountries 응답 스키마
 class Country(BaseModel):
     name: str
     capital: str
     region: str
     population: int = Field(gt=0)
 
+# ip-api 응답 스키마
 class IPInfo(BaseModel):
     query: str
     country: str
@@ -39,6 +42,7 @@ class IPInfo(BaseModel):
     lat: float
     lon: float
 
+# hourly 배열 3개(time/온도/강수확률)를 같은 인덱스끼리 묶어 레코드별로 검증한다.
 def parse_weather(data: dict) -> list[Weather]:
     hourly = data.get("hourly", {})
     times = hourly.get("time", [])
@@ -51,9 +55,11 @@ def parse_weather(data: dict) -> list[Weather]:
         try:
             records.append(Weather.model_validate(data))
         except ValidationError as e:
+            # 한 시간대 검증만 실패한 것이므로 나머지는 계속 처리한다.
             logger.error("Weather 데이터 검증 실패(time: %s): %s", time, e)
     return records
 
+# 필요한 필드만 추려 Country로 검증하고, 실패하면 None을 반환한다.
 def parse_country(data: dict) -> Country:
     data = {
         "name": data["name"],
@@ -67,6 +73,7 @@ def parse_country(data: dict) -> Country:
         logger.error("Country 레코드 검증 실패: %s", e)
         return None
 
+# 필요한 필드만 추려 IPInfo로 검증하고, 실패하면 None을 반환한다.
 def parse_ip(data: dict) -> IPInfo:
     data = {
         "query": data["query"],
