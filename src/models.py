@@ -13,7 +13,7 @@ class Country(BaseModel):
     name: str
     capital: str
     region: str
-    population: int
+    population: int = Field(gt=0)
 
 class IPInfo(BaseModel):
     query: str
@@ -37,7 +37,7 @@ def parse_weather(data: dict) -> list[Weather]:
             logger.error("Weather 데이터 검증 실패(time: %s): %s", time, e)
     return records
 
-def parse_country(data: dict) -> CountryInfo:
+def parse_country(data: dict) -> Country:
     data = {
         "name": data["name"],
         "capital": data["capital"],
@@ -45,7 +45,7 @@ def parse_country(data: dict) -> CountryInfo:
         "region": data["region"],
     }
     try:
-        return CountryInfo.model_validate(data)
+        return Country.model_validate(data)
     except ValidationError as e:
         logger.error("Country 레코드 검증 실패: %s", e)
         return None

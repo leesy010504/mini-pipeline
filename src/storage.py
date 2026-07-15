@@ -2,7 +2,7 @@ import time
 from pathlib import Path
 
 import pandas as pd
-from pandantic import BaseModel
+from pydantic import BaseModel
 
 DATA_DIR = Path("data")
 
